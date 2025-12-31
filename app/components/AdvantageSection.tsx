@@ -21,101 +21,48 @@ interface Service {
   step: number;
 }
 
-export const services: Service[] = [
-  {
-    id: "0",
-    step: 1,
-    title: "Priority Processing for Quick Track Application",
-    icon: <FaFastForward className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "1",
-    step: 2,
-    title: "Resume Preparation by German Standards",
-    icon: <FaClipboardList className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "2",
-    step: 3,
-    title: "Job Posting and Applications",
-    icon: <FaBriefcase className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "3",
-    step: 4,
-    title: "Post Landing Services for Easy Settlement",
-    icon: <FaHome className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "4",
-    step: 5,
-    title: "General Relocation Assistance",
-    icon: <FaSuitcase className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "5",
-    step: 6,
-    title: "Case Officer of Special Expertise",
-    icon: <FaUserTie className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "6",
-    step: 7,
-    title: "Comprehensive Documentation Support",
-    icon: <FaFileAlt className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "7",
-    step: 8,
-    title: "Writing Motivational Letter",
-    icon: <FaPenFancy className="text-orange-500 text-3xl" />,
-  },
-  {
-    id: "8",
-    step: 9,
-    title: "Language Training for Better Opportunities",
-    icon: <FaLanguage className="text-orange-500 text-3xl" />,
-  },
+const services: Service[] = [
+  { id: "0", step: 1, title: "Priority Processing for Quick Track Application", icon: <FaFastForward /> },
+  { id: "1", step: 2, title: "Resume Preparation by German Standards", icon: <FaClipboardList /> },
+  { id: "2", step: 3, title: "Job Posting and Applications", icon: <FaBriefcase /> },
+  { id: "3", step: 4, title: "Post Landing Services for Easy Settlement", icon: <FaHome /> },
+  { id: "4", step: 5, title: "General Relocation Assistance", icon: <FaSuitcase /> },
+  { id: "5", step: 6, title: "Case Officer of Special Expertise", icon: <FaUserTie /> },
+  { id: "6", step: 7, title: "Comprehensive Documentation Support", icon: <FaFileAlt /> },
+  { id: "7", step: 8, title: "Writing Motivational Letter", icon: <FaPenFancy /> },
+  { id: "8", step: 9, title: "Language Training for Better Opportunities", icon: <FaLanguage /> },
 ];
 
-// ✅ PERFECTLY TYPE-SAFE for Next.js 16.1.1 + Framer Motion
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
+    transition: { staggerChildren: 0.1 },
   },
 } as const;
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.4,
-      ease: [0.42, 0, 0.58, 1], // ✅ Custom easeInOut cubic-bezier - TYPE SAFE!
-    },
+    transition: { duration: 0.3 },
   },
 } as const;
 
 const ServicesComponent: React.FC = () => {
   return (
-    <section className="w-full py-16 md:py-24 lg:py-32 bg-gradient-to-b from-slate-50/50 to-white/80">
+    <section className="w-full py-10 md:py-14 lg:py-16 bg-gradient-to-b from-slate-50 to-white">
       <motion.div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl"
+        className="max-w-7xl mx-auto px-4 sm:px-6"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true }}
         variants={containerVariants}
       >
-        {/* Header */}
-        <div className="text-center mb-16 lg:mb-24">
+        {/* HEADER */}
+        <div className="text-center mb-16 lg:mb-12">
           <motion.h2
             className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.5rem] font-bold uppercase mb-6 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent leading-tight"
             variants={cardVariants}
@@ -136,44 +83,44 @@ const ServicesComponent: React.FC = () => {
           </motion.p>
         </div>
 
-        {/* Services Grid */}
+        {/* GRID */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5"
           variants={containerVariants}
         >
           {services.map((service) => (
             <motion.div
               key={service.id}
               variants={cardVariants}
-              className="group relative bg-white/90 backdrop-blur-xl p-8 lg:p-10 rounded-3xl shadow-lg border border-orange-100/50 hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-3 hover:border-orange-400/70 transition-all duration-500 overflow-hidden hover:bg-white"
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.01 }}
+              className="
+                relative bg-white
+                p-5 lg:p-6
+                rounded-xl
+                border border-orange-100
+                shadow-sm hover:shadow-md
+                transition-all
+              "
             >
-              {/* Step Badge */}
-              <div className="absolute -top-4 -left-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black shadow-xl border-4 border-white/50">
+              {/* STEP */}
+              <div className="absolute -top-3 -left-3 w-9 h-9 rounded-lg bg-orange-500 text-white text-sm font-bold flex items-center justify-center shadow">
                 {service.step}
               </div>
 
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-white/50 to-orange-100/60 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none rounded-3xl" />
-
-              <div className="relative z-10">
-                {/* Icon */}
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r from-orange-100 to-orange-200 text-orange-600 mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 mx-auto">
-                  {service.icon}
-                </div>
-
-                {/* Title */}
-                <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-4 text-center leading-tight group-hover:text-orange-600 transition-colors">
-                  {service.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-base lg:text-lg text-slate-600 text-center leading-relaxed opacity-90">
-                  This step focuses on{" "}
-                  <span className="text-orange-500 font-semibold">support</span>{" "}
-                  tailored to your Germany journey.
-                </p>
+              {/* ICON */}
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-orange-100 text-orange-500 text-xl mx-auto mb-3">
+                {service.icon}
               </div>
+
+              {/* TITLE */}
+              <h3 className="text-sm sm:text-base font-semibold text-center text-slate-900 mb-1 leading-snug line-clamp-2">
+                {service.title}
+              </h3>
+
+              {/* TEXT */}
+              <p className="text-xs sm:text-sm text-slate-600 text-center leading-relaxed">
+                Personalized assistance tailored to your Germany career goals.
+              </p>
             </motion.div>
           ))}
         </motion.div>
