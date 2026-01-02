@@ -26,12 +26,11 @@ export default function GermanyThankYouPage() {
             </div>
 
             <h1 className="mb-4 text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
-              Application <span className="text-orange-500">Received!</span>
+              Thank You — We’ll Be in Touch Soon
             </h1>
             
             <p className="mx-auto max-w-md text-lg font-medium text-gray-600 leading-relaxed mb-10">
-              Your Germany Opportunity Card details are now with our expert panel. 
-              We are analyzing your profile to maximize your success rate.
+              We’ve received your Germany Opportunity Card details. Our specialists are now analysing your profile to help you move forward with confidence.
             </p>
 
             {/* --- CALL SECTION (SHAKING ICON) --- */}
