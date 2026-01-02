@@ -39,7 +39,7 @@ export default function Form() {
 
       if (!res.ok) throw new Error("Failed to send");
 
-      router.push("/germany-opportunity-card/thankyou");
+      router.push("/germany-opportunity-card-2026/thankyou");
     } catch (err) {
       setError("Something went wrong. Please try again.");
       console.error(err);
