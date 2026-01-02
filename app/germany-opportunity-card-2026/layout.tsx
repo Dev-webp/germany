@@ -56,17 +56,6 @@ export default function RootLayout({
             fbq('track', 'PageView');
           `}
         </Script>
-        
-        {/* ✅ Facebook Pixel Noscript Fallback */}
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=2003555746606868&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
       </head>
       <body className="font-times antialiased bg-gray-50 text-gray-900">
         {children}
