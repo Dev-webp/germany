@@ -4,9 +4,11 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, email, phone, country, message } = body;
+    const { name, email, phone, experience, degree } = body;
 
-    // Transporter
+    const headers = request.headers;
+    const referer = headers.get("referer") || "Direct visit";
+
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: Number(process.env.EMAIL_PORT || 587),
@@ -17,39 +19,52 @@ export async function POST(request) {
       },
     });
 
-    // 1) Mail to you
+    // 1) EMAIL TO YOU (Admin)
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
       to: process.env.EMAIL_USER,
-      subject: `New Assessment Lead – ${name || "Unknown"}`,
+      subject: `🎯 NEW Germany Lead - ${name}`,
       html: `
-        <h2>New Assessment Form Submission</h2>
+        <h2 style="color: #f97316;">New Germany Assessment Lead</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Preferred Country:</strong> ${country}</p>
-        <p><strong>Message:</strong><br/>${message || "-"} </p>
+        <p><strong>Phone:</strong> <strong>${phone}</strong></p>
+        <p><strong>Experience:</strong> ${experience}</p>
+        <p><strong>Education:</strong> ${degree}</p>
+        <p><strong>Landing Page:</strong> <a href="${referer}">${referer}</a></p>
+        <div style="background: #fef3c7; padding: 15px; border-left: 5px solid #f59e0b; margin: 20px 0;">
+          <p><strong>📞 Call Immediately: +91 91604 49000</strong></p>
+        </div>
+        <hr><p style="font-size: 12px; color: #666;">VJC Overseas - Bangalore</p>
       `,
     });
 
-    // 2) Auto-reply to user
-    if (email) {
-      await transporter.sendMail({
-        from: process.env.EMAIL_FROM,
-        to: email,
-        subject: "We received your assessment request – VJC Overseas",
-        html: `
-          <p>Hi ${name || "there"},</p>
-          <p>Thank you for reaching out to <strong>VJC Overseas</strong>. We have received your details and one of our Germany / PR experts will contact you shortly.</p>
-          <p>If this is urgent, you can call us on <strong>+91 91604 49000</strong>.</p>
-          <p>Regards,<br/>VJC Overseas Team</p>
-        `,
-      });
-    }
+    // 2) THANK YOU AUTO-REPLY TO USER
+    await transporter.sendMail({
+      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
+      to: email,
+      subject: `✅ Thank You ${name} - Germany Assessment Received`,
+      html: `
+        <h2 style="color: #f97316;">Thank You ${name}!</h2>
+        <p>We've received your Germany Opportunity Card assessment request.</p>
+        <p>One of our immigration experts will contact you within <strong>24 hours</strong>.</p>
+        
+        <div style="background: #dbeafe; padding: 20px; border-left: 5px solid #3b82f6; margin: 20px 0;">
+          <p><strong>📞 Urgent? Call Now:</strong></p>
+          <p style="font-size: 24px; margin: 10px 0; color: #1e40af;"><strong>+91 91604 49000</strong></p>
+        </div>
+        
+        <p style="font-size: 14px; color: #666;">
+          Best regards,<br>
+          VJC Overseas Team<br>
+          <a href="https://vjcoverseas.com">vjcoverseas.com</a> | Hyderabad | Bangalore | USA
+        </p>
+      `,
+    });
 
-    return NextResponse.json({ ok: true }, { status: 200 });
+    return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("Email error", err);
-    return NextResponse.json({ ok: false }, { status: 500 });
+    console.error("Email error:", err);
+    return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }

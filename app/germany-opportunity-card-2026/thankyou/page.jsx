@@ -75,7 +75,7 @@ export default function GermanyThankYouPage() {
             {/* Action Buttons */}
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <Link 
-                href="/" 
+                href="/germany-opportunity-card-2026" 
                 className="flex items-center gap-2 rounded-full border-2 border-blue-400 px-8 py-3 font-bold text-blue-500 hover:bg-blue-400 hover:text-white transition-all active:scale-95"
               >
                 <FaArrowLeft size={14} /> Back to Home

@@ -13,7 +13,7 @@ export default function Home() {
         
         <div className="flex flex-col sm:flex-row gap-6 justify-center">
           <Link
-            href="/germany-opportunity-card"
+            href="/germany-opportunity-card-2026"
             className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-6 text-xl font-semibold rounded-lg shadow-xl transition-all duration-300 font-times"
           >
             Germany Opportunity Card

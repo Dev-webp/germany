@@ -86,11 +86,10 @@ export default function Form() {
 
               <div className="text-left min-w-0">
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-white drop-shadow-sm truncate">
-                  Check{" "}
-                  <span className="bg-white/20 backdrop-blur-sm px-1 rounded text-white font-black">
+                  Check Your
+                
                     Eligibility
-                  </span>{" "}
-                  for Germany
+                 
                 </h3>
 
                
@@ -228,9 +227,7 @@ export default function Form() {
                   )}
                 </span>
               </button>
-              <p className="text-[9px] sm:text-[10px] text-gray-700 tracking-wider font-medium">
-                Official Points-Based Assessment
-              </p>
+            
             </div>
           </form>
         </div>
