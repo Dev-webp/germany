@@ -7,10 +7,10 @@ export default function Form() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // NEW: Resume upload state
+  // Resume upload state - NOW MANDATORY
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
-  // NEW: Handle file upload
+  // Handle file upload
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -18,13 +18,14 @@ export default function Form() {
       const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (validTypes.includes(file.type)) {
         setResumeFile(file);
+        setError(""); // Clear any resume error
       } else {
         alert('Please upload a PDF or Word document');
       }
     }
   };
 
-  // NEW: Remove uploaded file
+  // Remove uploaded file
   const removeFile = () => {
     setResumeFile(null);
   };
@@ -32,6 +33,13 @@ export default function Form() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+
+    // MANDATORY CHECK: Resume must be uploaded
+    if (!resumeFile) {
+      setError("Please upload your resume to continue");
+      return;
+    }
+
     setLoading(true);
 
     const form = e.currentTarget as HTMLFormElement & {
@@ -42,21 +50,19 @@ export default function Form() {
       degree: { value: string };
     };
 
-    // NEW: Create FormData to include file
+    // Create FormData to include file
     const formData = new FormData();
     formData.append('name', form.name.value);
     formData.append('email', form.email.value);
     formData.append('phone', form.phone.value);
     formData.append('experience', form.experience.value);
     formData.append('degree', form.degree.value);
-    if (resumeFile) {
-      formData.append('resume', resumeFile);
-    }
+    formData.append('resume', resumeFile); // Resume is now required
 
     try {
       const res = await fetch("/api/assessment", {
         method: "POST",
-        body: formData, // Changed from JSON to FormData
+        body: formData,
       });
 
       if (!res.ok) throw new Error("Failed to send");
@@ -92,7 +98,7 @@ export default function Form() {
         {/* Single Section Card - ONE continuous block */}
         <div className="relative overflow-hidden bg-gradient-to-br from-orange-500/95 via-orange-400/80 to-orange-300/70 rounded-3xl shadow-2xl">
           {/* Header - Text Only (No Image) */}
-          <div className="relative  sm:px-2 sm:py-2 lg:px-2 lg:py-2 text-center">
+          <div className="relative sm:px-2 sm:py-2 lg:px-2 lg:py-2 text-center">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-white drop-shadow-sm">
               Check Your Eligibility for the Germany
             </h3>
@@ -176,18 +182,20 @@ export default function Form() {
               </div>
             </div>
 
-            {/* NEW: Resume Upload Section */}
+            {/* MANDATORY Resume Upload Section */}
             <div className="space-y-1">
-              <label className={labelStyles}>Upload Resume (Optional)</label>
+              <label className={labelStyles}>
+                Upload Resume <span className="text-red-600">*</span>
+              </label>
               {!resumeFile ? (
                 <label className="cursor-pointer block">
-                  <div className="w-full p-4 bg-white/90 border-2 border-dashed border-gray-300 rounded-xl hover:bg-white hover:border-orange-400 transition-all flex flex-col items-center justify-center gap-2">
+                  <div className="w-full p-4 bg-white/90 border-2 border-dashed border-orange-400 rounded-xl hover:bg-white hover:border-orange-500 transition-all flex flex-col items-center justify-center gap-2">
                     {/* Upload Icon SVG */}
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
-                    <span className="text-xs font-medium text-gray-600">Click to upload resume</span>
-                    <span className="text-[10px] text-gray-400">PDF, DOC, or DOCX (Max 5MB)</span>
+                    <span className="text-xs font-bold text-orange-600">Click to upload resume (Required)</span>
+                    <span className="text-[10px] text-gray-500">PDF, DOC, or DOCX (Max 5MB)</span>
                   </div>
                   <input
                     type="file"
