@@ -3,25 +3,40 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { name, email, phone, experience, degree } = body;
+    // Handle FormData instead of JSON
+    const formData = await request.formData();
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const experience = formData.get('experience');
+    const degree = formData.get('degree');
+    const resumeFile = formData.get('resume');
 
     const headers = request.headers;
     const referer = headers.get("referer") || "Direct visit";
 
+    // Prepare resume attachment if file exists
+    let resumeAttachment = null;
+    if (resumeFile) {
+      const buffer = Buffer.from(await resumeFile.arrayBuffer());
+      resumeAttachment = {
+        filename: resumeFile.name,
+        content: buffer,
+      };
+    }
+
+    // FIXED: Proper Gmail configuration
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: Number(process.env.EMAIL_PORT || 587),
-      secure: false,
+      service: 'gmail', // Using Gmail service
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS, // Must be App Password, not regular password
       },
     });
 
     // 1) EMAIL TO YOU (Admin)
     await transporter.sendMail({
-      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
+      from: process.env.EMAIL_USER, // FIXED: Use the authenticated email
       to: process.env.EMAIL_USER,
       subject: `🎯 NEW Germany Lead - ${name}`,
       html: `
@@ -31,17 +46,19 @@ export async function POST(request) {
         <p><strong>Phone:</strong> <strong>${phone}</strong></p>
         <p><strong>Experience:</strong> ${experience}</p>
         <p><strong>Education:</strong> ${degree}</p>
+        <p><strong>Resume:</strong> ${resumeFile ? '✅ Attached' : '❌ Not provided'}</p>
         <p><strong>Landing Page:</strong> <a href="${referer}">${referer}</a></p>
         <div style="background: #fef3c7; padding: 15px; border-left: 5px solid #f59e0b; margin: 20px 0;">
           <p><strong>📞 Call Immediately: +91 91604 49000</strong></p>
         </div>
         <hr><p style="font-size: 12px; color: #666;">VJC Overseas - Bangalore</p>
       `,
+      ...(resumeAttachment && { attachments: [resumeAttachment] }),
     });
 
     // 2) THANK YOU AUTO-REPLY TO USER
     await transporter.sendMail({
-      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
+      from: process.env.EMAIL_USER, // FIXED: Use the authenticated email
       to: email,
       subject: `✅ Thank You ${name} - Germany Assessment Received`,
       html: `

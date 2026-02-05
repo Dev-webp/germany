@@ -2,12 +2,32 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function Form() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // NEW: Resume upload state
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+
+  // NEW: Handle file upload
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type (PDF, DOC, DOCX)
+      const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (validTypes.includes(file.type)) {
+        setResumeFile(file);
+      } else {
+        alert('Please upload a PDF or Word document');
+      }
+    }
+  };
+
+  // NEW: Remove uploaded file
+  const removeFile = () => {
+    setResumeFile(null);
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,19 +42,21 @@ export default function Form() {
       degree: { value: string };
     };
 
-    const data = {
-      name: form.name.value,
-      email: form.email.value,
-      phone: form.phone.value,
-      experience: form.experience.value,
-      degree: form.degree.value,
-    };
+    // NEW: Create FormData to include file
+    const formData = new FormData();
+    formData.append('name', form.name.value);
+    formData.append('email', form.email.value);
+    formData.append('phone', form.phone.value);
+    formData.append('experience', form.experience.value);
+    formData.append('degree', form.degree.value);
+    if (resumeFile) {
+      formData.append('resume', resumeFile);
+    }
 
     try {
       const res = await fetch("/api/assessment", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData, // Changed from JSON to FormData
       });
 
       if (!res.ok) throw new Error("Failed to send");
@@ -69,32 +91,11 @@ export default function Form() {
 
         {/* Single Section Card - ONE continuous block */}
         <div className="relative overflow-hidden bg-gradient-to-br from-orange-500/95 via-orange-400/80 to-orange-300/70 rounded-3xl shadow-2xl">
-          {/* Header (no separate bg / border) */}
-          <div className="relative px-4 py-4 sm:px-6 sm:py-5 lg:px-5 lg:py-4">
-            <div className="flex flex-row items-center gap-2 sm:gap-3">
-              <div
-                className="relative flex-shrink-0 border-2 border-white/50 shadow-2xl
-                   h-12 w-20 sm:h-12 sm:w-20 lg:h-10 lg:w-16 overflow-hidden rounded-2xl"
-              >
-                <Image
-                  src="/germany.jpg"
-                  alt="Germany flag"
-                  fill
-                  className="object-cover rounded-xl brightness-110 contrast-125"
-                />
-              </div>
-
-              <div className="text-left min-w-0">
-                <h3 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-white drop-shadow-sm truncate">
-                  Check Your
-                
-                    Eligibility
-                 
-                </h3>
-
-               
-              </div>
-            </div>
+          {/* Header - Text Only (No Image) */}
+          <div className="relative  sm:px-2 sm:py-2 lg:px-2 lg:py-2 text-center">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-white drop-shadow-sm">
+              Check Your Eligibility for the Germany
+            </h3>
           </div>
 
           {/* Form - same section, just below header */}
@@ -173,6 +174,52 @@ export default function Form() {
                   </option>
                 </select>
               </div>
+            </div>
+
+            {/* NEW: Resume Upload Section */}
+            <div className="space-y-1">
+              <label className={labelStyles}>Upload Resume (Optional)</label>
+              {!resumeFile ? (
+                <label className="cursor-pointer block">
+                  <div className="w-full p-4 bg-white/90 border-2 border-dashed border-gray-300 rounded-xl hover:bg-white hover:border-orange-400 transition-all flex flex-col items-center justify-center gap-2">
+                    {/* Upload Icon SVG */}
+                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="text-xs font-medium text-gray-600">Click to upload resume</span>
+                    <span className="text-[10px] text-gray-400">PDF, DOC, or DOCX (Max 5MB)</span>
+                  </div>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              ) : (
+                <div className="w-full p-3 bg-green-50 border border-green-300 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {/* File Icon SVG */}
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <div>
+                      <p className="text-xs font-medium text-green-900">{resumeFile.name}</p>
+                      <p className="text-[10px] text-green-600">{(resumeFile.size / 1024).toFixed(1)} KB</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeFile}
+                    className="p-1.5 hover:bg-green-100 rounded-lg transition-colors"
+                  >
+                    {/* X Icon SVG */}
+                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
 
             {error && (
