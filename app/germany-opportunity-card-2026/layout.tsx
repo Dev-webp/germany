@@ -19,7 +19,22 @@ export default function RootLayout({
           name="google-site-verification"
           content="L_PNy3dgEzp57F2JsXfvTXBc7aedqUdzow1IyvEmCUE"
         />
-        {/* ✅ Google Ads Global Site Tag */}
+        
+        {/* ✅ NEW Google Ads - AW-17961063738 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17961063738"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-new" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17961063738');
+          `}
+        </Script>
+
+        {/* ✅ Previous Google Ads Global Site Tag */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-16767451796"
           strategy="afterInteractive"
@@ -32,7 +47,7 @@ export default function RootLayout({
             gtag('config', 'G-JPH0CGYTXT');
           `}
         </Script>
-        <Script id="google-ads" strategy="afterInteractive">
+        <Script id="google-ads-old" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
