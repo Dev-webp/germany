@@ -1,11 +1,12 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "German Opportunity Card 2026 | Apply Now for Work & Settle in Germany",
-  description: "Apply for the Germany Opportunity Card and move to Germany in 2026. Check eligibility, points system, job search rules, salary options & the full process. Fast support, expert guidance & 100% professional service.",
-  keywords: "germany opportunity card 2026,germany chancenkarte,germany job seeker visa,opportunity card Germany,germany work visa without job offer,germany job seeker visa apply online,germany job seeker visa 2026,job search visa Germany,job seeker visa germany requirements,apply for job seeker visa Germany,germany job seeker visa official website,job seeker Germany,chancenkarte Deutschland,opportunity card germany apply online,job seeker visa germany from india,www germany job seeker visa com,apply for germany job seeker visa,chancenkarte Germany,germany seeker visa,job seeker visa germany from uae,make it in germany job seeker visa,germany job seeker visa 2026,jobseeker in Germany,apply job seeker visa germany,germany opportunity card application,apply germany job seeker visa,job seeker visa germany 2026",
+  title: "Germany Opportunity Card 2026 | Apply Now for Work & Settle in Germany",
+  description:
+    "Apply for the Germany Opportunity Card and move to Germany in 2026. Check eligibility, points system, job search rules, salary options & the full process. Fast support, expert guidance & 100% professional service.",
+  keywords:
+    "germany opportunity card 2026,germany chancenkarte,germany job seeker visa,opportunity card Germany,germany work visa without job offer,germany job seeker visa apply online,germany job seeker visa 2026,job search visa Germany,job seeker visa germany requirements,apply for job seeker visa Germany,germany job seeker visa official website,job seeker Germany,chancenkarte Deutschland,opportunity card germany apply online,job seeker visa germany from india,www germany job seeker visa com,apply for germany job seeker visa,chancenkarte Germany,germany seeker visa,job seeker visa germany from uae,make it in germany job seeker visa,germany job seeker visa 2026,jobseeker in Germany,apply job seeker visa germany,germany opportunity card application,apply germany job seeker visa,job seeker visa germany 2026",
 };
 
 export default function RootLayout({
@@ -16,23 +17,40 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google Site Verification */}
         <meta
           name="google-site-verification"
           content="L_PNy3dgEzp57F2JsXfvTXBc7aedqUdzow1IyvEmCUE"
         />
+      </head>
+      <body className="font-times antialiased bg-gray-50 text-gray-900">
+        {children}
 
-        {/* ✅ NEW Google Ads - AW-17961063738 */}
+        {/* ✅ Google Ads - Load gtag.js */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17961063738"
           strategy="afterInteractive"
         />
-        <Script id="google-ads-new" strategy="afterInteractive">
+
+        {/* ✅ Google Ads - Initialize gtag config */}
+        <Script id="google-ads-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'AW-17961063738');
+          `}
+        </Script>
+
+        {/* ✅ Google Ads - Conversion Event Snippet
+            Fires ONLY on this Thank You page — correct placement for tracking
+            form submissions, sign-ups, or any completed conversion action. */}
+        <Script id="google-ads-conversion" strategy="afterInteractive">
+          {`
+            gtag('event', 'conversion', {
+              'send_to': 'AW-17961063738/mianCI7UhoIcELqqwPRC',
+              'value': 1.0,
+              'currency': 'INR'
+            });
           `}
         </Script>
 
@@ -51,9 +69,6 @@ export default function RootLayout({
             fbq('track', 'PageView');
           `}
         </Script>
-      </head>
-      <body className="font-times antialiased bg-gray-50 text-gray-900">
-        {children}
       </body>
     </html>
   );
